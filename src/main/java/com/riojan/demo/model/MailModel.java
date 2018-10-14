@@ -1,14 +1,15 @@
 package com.riojan.demo.model;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MailModel {
 
     private String body;
     private String subject;
-    private List<String> to;
-    private List<String> cc;
-    private List<String> bbc;
+    private List<String> to = Collections.emptyList();
+    private List<String> cc = Collections.emptyList();
+    private List<String> bbc = Collections.emptyList();
 
     public String getBody() {
         return body;
