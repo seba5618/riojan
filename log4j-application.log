@@ -1,0 +1,7 @@
+2018-10-14 04:50:45 INFO  MailController:30 - To:
+2018-10-14 04:50:45 INFO  MailController:33 - maxi.ruiz1404@gmail.com
+2018-10-14 04:50:45 INFO  MailController:48 - Subject: Hola mundo
+2018-10-14 04:50:45 INFO  MailController:49 - From: com.sendgrid.Email@1a4a8c07
+2018-10-14 04:50:45 INFO  MailController:50 - Content: 
+2018-10-14 04:50:45 INFO  MailController:51 - com.sendgrid.Content@18b1a0d3
+2018-10-14 04:50:47 INFO  MailController:65 - 202
