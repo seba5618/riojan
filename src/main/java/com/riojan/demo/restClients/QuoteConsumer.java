@@ -2,28 +2,33 @@ package com.riojan.demo.restClients;
 
 import com.riojan.demo.model.Quote;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
+import java.util.Optional;
 
 @Component
 public class QuoteConsumer {
 
-    private final String URL = "https://talaikis.com/api/quotes/random/";
+    @Value("${quoteRestService:https://talaikis.com/api/quotes/random/}")
+    private String URL;
 
-    public Quote getQuote(){
+    private static final Logger LOGGER = Logger.getLogger(QuoteConsumer.class);
 
+    public Optional<Quote> getQuote(){
+        Quote quote = null;
         try{
             Client clientBuilder = ClientBuilder.newClient();
-            Quote quote  = clientBuilder.target(URL).request(MediaType.APPLICATION_JSON_TYPE).get(Quote.class);
-            System.out.println(quote.getQuote());
-            return quote;
+            quote  = clientBuilder.target(URL).request(MediaType.APPLICATION_JSON_TYPE).get(Quote.class);
+
         }catch (Exception e){
-            e.printStackTrace();
+            LOGGER.error(e);
         }
-        return null;
+        return Optional.ofNullable(null);
 
     }
 

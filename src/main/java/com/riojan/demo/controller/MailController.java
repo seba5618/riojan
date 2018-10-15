@@ -2,6 +2,7 @@ package com.riojan.demo.controller;
 
 import com.riojan.demo.model.MailModel;
 
+import com.riojan.demo.model.Quote;
 import com.riojan.demo.restClients.QuoteConsumer;
 import com.riojan.demo.utils.FilterOutEmailsByDomains;
 import com.riojan.demo.utils.SendgridKey;
@@ -49,12 +50,10 @@ public class MailController {
 
         Content content = new Content("text/html", emailJson.getBody());
         if(emailJson.isSendQuote()) {
-            StringBuilder contentB = new StringBuilder(emailJson.getBody());
-            contentB.append(quoteConsumer.getQuote());
-            content.setValue(contentB.toString());
+            content.setValue(emailJson.getBody() + quoteConsumer.getQuote().orElse(Quote.EMPTY_QUOTE));
         }
-        String subject = emailJson.getSubject();
 
+        String subject = emailJson.getSubject();
         Personalization personalization = createPersonalization(emailJson);
 
         Mail mail = new Mail();
@@ -80,10 +79,11 @@ public class MailController {
             request.setBody(mail.build());
 
             Response response = sendgrid.api(request);
-            response.setBody(response.getBody()+"Is the system configured to filter external emails: "+this.filterEmails);
+            response.getHeaders().put("Filtering external domains emails",String.valueOf(this.filterEmails));
             LOGGER.info(response.getStatusCode());
             return response;
         } catch (IOException ex) {
+            LOGGER.error(ex);
             throw ex;
         }
     }

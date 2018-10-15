@@ -63,21 +63,14 @@ public class MailModel {
     }
 
     public String toString(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("to: ");
-        sb.append(this.to);
-        sb.append("\nbody: ");
-        sb.append(this.body);
-        sb.append("\nsubject: ");
-        sb.append(this.subject);
-        sb.append("\ncc: ");
-        sb.append(this.cc);
-        return sb.toString();
-    }
-
-
-
-    public void validate (){
-
+        String sb = "to: " +
+                this.to +
+                "\nbody: " +
+                this.body +
+                "\nsubject: " +
+                this.subject +
+                "\ncc: " +
+                this.cc;
+        return sb;
     }
 }

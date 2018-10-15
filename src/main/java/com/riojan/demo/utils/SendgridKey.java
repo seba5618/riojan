@@ -29,7 +29,22 @@ public class SendgridKey {
         c.init(Cipher.DECRYPT_MODE, key);
         byte[] decordedValue = Base64.getDecoder().decode(encryptedData);
         byte[] decValue = c.doFinal(decordedValue);
-        return new String(decValue);
+        String result = new String(decValue);
+        return result;
+    }
+
+    /**
+     * Decrypt a string with AES algorithm.
+     *
+     * @param encryptedData is a string
+     * @return the decrypted string
+     */
+    private String encrypt(String plainData) throws Exception {
+        Key key = generateKey();
+        Cipher c = Cipher.getInstance(ALGO);
+        c.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encValue = c.doFinal(plainData.getBytes());
+        return Base64.getEncoder().encodeToString(encValue);
     }
 
     public String getKey() throws Exception{
@@ -40,12 +55,14 @@ public class SendgridKey {
     /**
      * Generate a new encryption key.
      */
-    private static Key generateKey() throws Exception {
+    private static Key generateKey() {
         return new SecretKeySpec(keyValue, ALGO);
     }
 
 
-
-
-
+    public static void main (String args[]) throws Exception{
+        SendgridKey sendgridKey = new SendgridKey();
+        System.out.println(sendgridKey.getKey());
+        System.out.println(sendgridKey.encrypt(sendgridKey.getKey()));
+    }
 }

@@ -1,7 +1,6 @@
 package com.riojan.demo.utils;
 
 import com.google.common.collect.Collections2;
-import com.riojan.demo.controller.MailController;
 import com.sendgrid.Email;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,8 @@ import java.util.List;
 @Component
 public class FilterOutEmailsByDomains {
 
-    private static Logger logger = Logger.getLogger(FilterOutEmailsByDomains.class);
-    private String domain;
+    private static final Logger LOGGER = Logger.getLogger(FilterOutEmailsByDomains.class);
+    private final String domain;
 
     @Autowired
     public FilterOutEmailsByDomains(@Value("${validDomain}") String  domain){
@@ -28,7 +27,7 @@ public class FilterOutEmailsByDomains {
             if (email.getEmail().endsWith(domain)) {
                 result = true;
             } else {
-                logger.info("Filtering out non valid domain email. Valid domain: "+domain +". Email filtered: "+email.getEmail());
+                LOGGER.info("Filtering out non valid domain email. Valid domain: "+domain +". Email filtered: "+email.getEmail());
             }
             return result;
         });

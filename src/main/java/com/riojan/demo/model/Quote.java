@@ -11,6 +11,8 @@ public class Quote {
     private String content;
     private String title;
 
+    public static final Quote EMPTY_QUOTE= new Quote();
+
 
     public String getId() {
         return id;
@@ -61,14 +63,16 @@ public class Quote {
     }
 
     public String toString(){
-        StringBuilder result = new StringBuilder();
 
-        result.append("<br/><br/>--<br/>«");
-        result.append(this.quote);
-        result.append("».");
-        result.append(" By ");
-        result.append(this.author);
-        result.append(".<br/>");
-        return result.toString();
+        String result = "";
+        if (this.content!=null){
+            result = "<br/><br/>--<br/>«" +
+                    this.quote +
+                    "»." +
+                    " By " +
+                    this.author +
+                    ".<br/>";
+        }
+        return result;
     }
 }
