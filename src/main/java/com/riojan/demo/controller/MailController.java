@@ -2,6 +2,7 @@ package com.riojan.demo.controller;
 
 import com.riojan.demo.model.MailModel;
 
+import com.riojan.demo.restClients.QuoteConsumer;
 import com.riojan.demo.utils.FilterOutEmailsByDomains;
 import com.riojan.demo.utils.SendgridKey;
 import com.sendgrid.*;
@@ -14,67 +15,64 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Collection;
 
 
 @RestController
 @RequestMapping
 public class MailController {
 
+    private static final Logger LOGGER = Logger.getLogger(MailController.class);
+
     @Value("${mailFromEmail}")
     private String fromEmail;
-
     @Value("${mailFromName}")
     private String fromName;
+    @Value("${removeInvalidDomainEmails:true}")
+    private boolean filterEmails;
 
     @Autowired
     private SendgridKey kay;
-
     @Autowired
     private FilterOutEmailsByDomains filter;
-
-
-    private static Logger logger = Logger.getLogger(MailController.class);
+    @Autowired
+    private QuoteConsumer quoteConsumer;
 
 
     @RequestMapping(path="/email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response sendEmail(@RequestBody MailModel emailJson) throws Exception{
 
-
         SendGrid sendgrid = new SendGrid(kay.getKey());
 
         Email from = new Email(this.fromEmail, this.fromName);
-        logger.debug("frpom: "+from);
+        LOGGER.debug("frpom: "+from);
 
-        Content content = new Content("text/plain", emailJson.getBody());
+        Content content = new Content("text/html", emailJson.getBody());
+        if(emailJson.isSendQuote()) {
+            StringBuilder contentB = new StringBuilder(emailJson.getBody());
+            contentB.append(quoteConsumer.getQuote());
+            content.setValue(contentB.toString());
+        }
         String subject = emailJson.getSubject();
-        Personalization personalization = new Personalization();
-        logger.info("To:");
 
-
-        for(Email aTo: filter.filter(emailJson.getTo())){
-            personalization.addTo(aTo);
-            logger.info(aTo);
-        }
-
-        for(Email aCc: emailJson.getCc()){
-            personalization.addTo(aCc);
-        }
-        for(Email aBcc: emailJson.getBbc()){
-            personalization.addTo(aBcc);
-        }
+        Personalization personalization = createPersonalization(emailJson);
 
         Mail mail = new Mail();
         mail.setSubject(subject);
         mail.addContent(content);
         mail.setFrom(from);
 
-        logger.info("Subject: " + subject);
-        logger.info("From: " + from);
-        logger.info("Content: ");
-        logger.info(content.getValue());
+        LOGGER.info("Subject: " + subject);
+        LOGGER.info("From: " + from);
+        LOGGER.info("Content: ");
+        LOGGER.info(content.getValue());
 
         mail.addPersonalization(personalization);
 
+        return sendMail(sendgrid, mail);
+    }
+
+    private Response sendMail(SendGrid sendgrid, Mail mail) throws IOException {
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
@@ -82,12 +80,44 @@ public class MailController {
             request.setBody(mail.build());
 
             Response response = sendgrid.api(request);
-            logger.info(response.getStatusCode());
+            response.setBody(response.getBody()+"Is the system configured to filter external emails: "+this.filterEmails);
+            LOGGER.info(response.getStatusCode());
             return response;
         } catch (IOException ex) {
             throw ex;
         }
-
     }
 
+    private Personalization createPersonalization(@RequestBody MailModel emailJson) {
+
+        Collection<Email> filteredTo = emailJson.getTo();
+        if(filterEmails){
+            filteredTo = filter.filter(emailJson.getTo());
+        }
+
+        Collection <Email> filteredCC = emailJson.getCc();
+        if(filterEmails){
+            filteredCC = filter.filter(emailJson.getCc());
+        }
+
+        Collection <Email> filteredBCC = emailJson.getBbc();
+        if(filterEmails){
+            filteredBCC = filter.filter(emailJson.getBbc());
+        }
+
+        Personalization personalization = new Personalization();
+
+        for(Email aTo: filteredTo){
+            personalization.addTo(aTo);
+            LOGGER.info(aTo);
+        }
+
+        for(Email aCc: filteredCC){
+            personalization.addTo(aCc);
+        }
+        for(Email aBcc: filteredBCC){
+            personalization.addTo(aBcc);
+        }
+        return personalization;
+    }
 }

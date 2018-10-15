@@ -9,6 +9,7 @@ public class MailModel {
 
     private String body;
     private String subject;
+    private boolean sendQuote;
     private List<Email> to = Collections.emptyList();
     private List<Email> cc = Collections.emptyList();
     private List<Email> bbc = Collections.emptyList();
@@ -51,6 +52,14 @@ public class MailModel {
 
     public void setBbc(List<Email> bbc) {
         this.bbc = bbc;
+    }
+
+    public boolean isSendQuote() {
+        return sendQuote;
+    }
+
+    public void setSendQuote(boolean sendQuote) {
+        this.sendQuote = sendQuote;
     }
 
     public String toString(){

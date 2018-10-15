@@ -59,4 +59,16 @@ public class Quote {
     public void setCat(String cat) {
         this.cat = cat;
     }
+
+    public String toString(){
+        StringBuilder result = new StringBuilder();
+
+        result.append("<br/><br/>--<br/>«");
+        result.append(this.quote);
+        result.append("».");
+        result.append(" By ");
+        result.append(this.author);
+        result.append(".<br/>");
+        return result.toString();
+    }
 }
