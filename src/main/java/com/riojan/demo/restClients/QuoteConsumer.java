@@ -28,7 +28,7 @@ public class QuoteConsumer {
         }catch (Exception e){
             LOGGER.error(e);
         }
-        return Optional.ofNullable(null);
+        return Optional.ofNullable(quote);
 
     }
 
