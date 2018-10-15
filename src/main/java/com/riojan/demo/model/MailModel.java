@@ -1,5 +1,7 @@
 package com.riojan.demo.model;
 
+import com.sendgrid.Email;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -7,9 +9,9 @@ public class MailModel {
 
     private String body;
     private String subject;
-    private List<String> to = Collections.emptyList();
-    private List<String> cc = Collections.emptyList();
-    private List<String> bbc = Collections.emptyList();
+    private List<Email> to = Collections.emptyList();
+    private List<Email> cc = Collections.emptyList();
+    private List<Email> bbc = Collections.emptyList();
 
     public String getBody() {
         return body;
@@ -27,27 +29,27 @@ public class MailModel {
         this.subject = subject;
     }
 
-    public List<String> getTo() {
+    public List<Email> getTo() {
         return to;
     }
 
-    public void setTo(List<String> to) {
+    public void setTo(List<Email> to) {
         this.to = to;
     }
 
-    public List<String> getCc() {
+    public List<Email> getCc() {
         return cc;
     }
 
-    public void setCc(List<String> cc) {
+    public void setCc(List<Email> cc) {
         this.cc = cc;
     }
 
-    public List<String> getBbc() {
+    public List<Email> getBbc() {
         return bbc;
     }
 
-    public void setBbc(List<String> bbc) {
+    public void setBbc(List<Email> bbc) {
         this.bbc = bbc;
     }
 

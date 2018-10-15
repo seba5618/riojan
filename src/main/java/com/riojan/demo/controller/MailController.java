@@ -2,8 +2,12 @@ package com.riojan.demo.controller;
 
 import com.riojan.demo.model.MailModel;
 
+import com.riojan.demo.utils.FilterOutEmailsByDomains;
+import com.riojan.demo.utils.SendgridKey;
 import com.sendgrid.*;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,28 +20,47 @@ import java.io.IOException;
 @RequestMapping
 public class MailController {
 
+    @Value("${mailFromEmail}")
+    private String fromEmail;
+
+    @Value("${mailFromName}")
+    private String fromName;
+
+    @Autowired
+    private SendgridKey kay;
+
+    @Autowired
+    private FilterOutEmailsByDomains filter;
+
+
     private static Logger logger = Logger.getLogger(MailController.class);
 
-    @RequestMapping(path="/email", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String sendEmail(@RequestBody MailModel emailJson) throws Exception{
-        SendGrid sendgrid = new SendGrid("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");
 
-        Email from = new Email("riojan@cambiame.com");
+    @RequestMapping(path="/email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response sendEmail(@RequestBody MailModel emailJson) throws Exception{
+
+
+        SendGrid sendgrid = new SendGrid(kay.getKey());
+
+        Email from = new Email(this.fromEmail, this.fromName);
+        logger.debug("frpom: "+from);
 
         Content content = new Content("text/plain", emailJson.getBody());
         String subject = emailJson.getSubject();
         Personalization personalization = new Personalization();
         logger.info("To:");
-        for(String aTo: emailJson.getTo()){
-            personalization.addTo(new Email(aTo));
+
+
+        for(Email aTo: filter.filter(emailJson.getTo())){
+            personalization.addTo(aTo);
             logger.info(aTo);
         }
 
-        for(String aCc: emailJson.getCc()){
-            personalization.addTo(new Email(aCc));
+        for(Email aCc: emailJson.getCc()){
+            personalization.addTo(aCc);
         }
-        for(String aBcc: emailJson.getBbc()){
-            personalization.addTo(new Email(aBcc));
+        for(Email aBcc: emailJson.getBbc()){
+            personalization.addTo(aBcc);
         }
 
         Mail mail = new Mail();
@@ -59,14 +82,12 @@ public class MailController {
             request.setBody(mail.build());
 
             Response response = sendgrid.api(request);
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getBody());
-            System.out.println(response.getHeaders());
             logger.info(response.getStatusCode());
+            return response;
         } catch (IOException ex) {
             throw ex;
         }
-        return mail.toString();
+
     }
 
 }
