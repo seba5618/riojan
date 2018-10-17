@@ -14,6 +14,9 @@ public class MailModel {
     private List<Email> cc = Collections.emptyList();
     private List<Email> bbc = Collections.emptyList();
 
+    public MailModel() {
+    }
+
     public String getBody() {
         return body;
     }

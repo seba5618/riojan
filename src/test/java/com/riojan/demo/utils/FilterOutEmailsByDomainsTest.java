@@ -20,29 +20,34 @@ public class FilterOutEmailsByDomainsTest {
 
     private List<Email> emails = new ArrayList<Email>();
 
-    @Autowired
-    private FilterOutEmailsByDomains filter;
+    private static final String DOMAIN = "gmail.com";
 
-    @Value("classpath:emailsMock.json")
-    Resource resourceFile;
-
-    @Value("${validDomain}") 
-    String  domain;
-
-    @Before
-    public void setUp() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        TypeReference typeReference = new TypeReference<List<Email>>(){};
-        InputStream inputStream = resourceFile.getInputStream();
-        emails = mapper.readValue(inputStream, typeReference);
-    }
+    private FilterOutEmailsByDomains filter = new FilterOutEmailsByDomains(DOMAIN);
 
     @Test
     public void testFilter() throws Exception {
 
-        Collection<Email> filtered = this.filter.filter(emails);
+        Collection<Email> filtered = this.filter.filter(this.listOfEmailsForTest());
         for(Email email : filtered) {
-            Assert.assertTrue(email.getEmail().endsWith(domain));
+            Assert.assertTrue(email.getEmail().endsWith(DOMAIN));
         }
     }
+
+    private List<Email> listOfEmailsForTest(){
+        Email email = new Email();
+
+        email.setName("Max");
+        email.setEmail("maxi.ruiz140@gmail.com");
+
+        Email email2 = new Email();
+        email2.setName("salchi");
+        email2.setEmail("salchichon.234@gmail.com");
+
+        ArrayList<Email> emails = new ArrayList<>();
+        emails.add(email);
+        emails.add(email2);
+        return emails;
+    }
+
+
 }

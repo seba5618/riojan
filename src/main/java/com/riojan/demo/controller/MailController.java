@@ -10,17 +10,37 @@ import com.sendgrid.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+
 
 @RestController
 @RequestMapping
 public class MailController {
+
+
+
+    @Configuration
+    static class SendGridConfiguration {
+
+        @Autowired
+        protected SendgridKey kay;
+
+        @Bean
+        public SendGrid sendGrid() throws Exception {
+            return new SendGrid(kay.getKey());
+        }
+
+    }
 
     private static final Logger LOGGER = Logger.getLogger(MailController.class);
 
@@ -32,17 +52,19 @@ public class MailController {
     private boolean filterEmails;
 
     @Autowired
-    private SendgridKey kay;
+    private SendGrid sendGrid;
     @Autowired
     private FilterOutEmailsByDomains filter;
     @Autowired
     private QuoteConsumer quoteConsumer;
 
 
+
+
     @RequestMapping(path="/email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response sendEmail(@RequestBody MailModel emailJson) throws Exception{
 
-        SendGrid sendgrid = new SendGrid(kay.getKey());
+
 
         Email from = new Email(this.fromEmail, this.fromName);
         LOGGER.debug("from: "+ from.getName() + " (" + from.getEmail() + ")");
@@ -64,18 +86,21 @@ public class MailController {
 
         mail.addPersonalization(personalization);
 
-        return sendMail(sendgrid, mail);
+        return sendMail(mail);
     }
 
-    private Response sendMail(SendGrid sendgrid, Mail mail) throws IOException {
+    private Response sendMail(Mail mail) throws IOException {
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
 
-            Response response = sendgrid.api(request);
-            response.getHeaders().put("Filtering external domains emails",String.valueOf(this.filterEmails));
+            Response response = sendGrid.api(request);
+            if(response.getHeaders()==null) {
+                response.setHeaders(new HashMap<>());
+            }
+            response.getHeaders().put("Filtering external domains emails", String.valueOf(this.filterEmails));
             LOGGER.info(response.getStatusCode());
             return response;
         } catch (IOException ex) {

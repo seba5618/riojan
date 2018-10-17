@@ -1,0 +1,16 @@
+{
+  "to": [{"name": "Sebastian",
+    "email": "sebaze@gmail.com"
+  },
+    {"name": "SebastianGGGG",
+      "email": "s.zeballos@globant.com"
+    }
+
+  ],
+
+
+  "subject": "Hola mundo",
+  "body": "Muchacha ojos  de  papeli ",
+  "sendQuote": true
+
+}
