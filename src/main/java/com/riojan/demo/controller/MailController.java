@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.Collection;
 
-
 @RestController
 @RequestMapping
 public class MailController {
@@ -46,7 +45,7 @@ public class MailController {
         SendGrid sendgrid = new SendGrid(kay.getKey());
 
         Email from = new Email(this.fromEmail, this.fromName);
-        LOGGER.debug("frpom: "+from);
+        LOGGER.debug("from: "+ from.getName() + " (" + from.getEmail() + ")");
 
         Content content = new Content("text/html", emailJson.getBody());
         if(emailJson.isSendQuote()) {
@@ -61,10 +60,7 @@ public class MailController {
         mail.addContent(content);
         mail.setFrom(from);
 
-        LOGGER.info("Subject: " + subject);
-        LOGGER.info("From: " + from);
-        LOGGER.info("Content: ");
-        LOGGER.info(content.getValue());
+        LOGGER.debug(emailJson);
 
         mail.addPersonalization(personalization);
 

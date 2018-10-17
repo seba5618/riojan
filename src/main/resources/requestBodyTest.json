@@ -1,0 +1,8 @@
+{
+  "to" : ["maxi.ruiz140gmail.com", "tersita.garro.castro@gmail.com"],
+  "cc" : ["maxi_ruiz140hotmail.com", "sebaze@gmail.com"],
+  "bbc" : ["fulano@rakenapp.com"],
+  "subject" : "test",
+  "body" : "Hello Raken",
+  "sendQuote" : false
+}
