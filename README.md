@@ -6,6 +6,7 @@ URL: localhost:8080/email
 ContentType: application/json
 
 Body:
+```
 {
   "to":
   [{"name": "Maxi",
@@ -29,5 +30,6 @@ Body:
   "body": "Have a good day!",
   "enrich": true
 }
+```
 
 When you set "enrich : true", this API will consume another REST service and add the result in the email content.
