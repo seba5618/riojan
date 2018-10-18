@@ -2,7 +2,9 @@
 For consume this REST API sned a POST request like this:
 
 URL: localhost:8080/email
+
 ContentType: application/json
+
 Body:
 {
   "to": 
