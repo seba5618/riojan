@@ -105,17 +105,23 @@ public class MailControllerTest {
     @Test
     public void shouldSendEmailSuccessfully() throws Exception {
 
-        MailModel test = new MailModel();
-        Email to = new Email();
-        to.setEmail("sebaze@gmail.com");
-        to.setName("seba");
         ArrayList<Email> toList = new ArrayList<>();
+        MailModel test = new MailModel();
+
+        Email to = new Email();
+        to.setEmail("maxi.ruiz140@gmail.com");
+        to.setName("Maxi");
+        toList.add(to);
+
+        to = new Email();
+        to.setEmail("maxi_ruiz140@hotmail.com");
+        to.setName("Maximiliano");
         toList.add(to);
 
         test.setTo(toList);
         test.setSubject("subject");
-        test.setSendQuote(false);
         test.setBody("body");
+        test.setSendQuote(false);
 
 
         mockMvc.perform(post(URL)
@@ -129,11 +135,12 @@ public class MailControllerTest {
     @Test
     public void shouldSendEmailSuccessfullyWithQuote() throws Exception {
 
-        MailModel test = new MailModel();
-        Email to = new Email();
-        to.setEmail("sebaze@gmail.com");
-        to.setName("seba");
         ArrayList<Email> toList = new ArrayList<>();
+        MailModel test = new MailModel();
+
+        Email to = new Email();
+        to.setEmail("maxi.ruiz140@gmail.com");
+        to.setName("Maxi");
         toList.add(to);
 
         test.setTo(toList);

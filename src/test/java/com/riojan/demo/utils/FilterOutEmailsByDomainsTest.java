@@ -34,20 +34,49 @@ public class FilterOutEmailsByDomainsTest {
     }
 
     private List<Email> listOfEmailsForTest(){
-        Email email = new Email();
+        ArrayList<Email> emails = new ArrayList<>();
 
+        Email email = new Email();
         email.setName("Max");
         email.setEmail("maxi.ruiz140@gmail.com");
-
-        Email email2 = new Email();
-        email2.setName("salchi");
-        email2.setEmail("salchichon.234@gmail.com");
-
-        ArrayList<Email> emails = new ArrayList<>();
         emails.add(email);
-        emails.add(email2);
+
+        email = new Email();
+        email.setName("Tere");
+        email.setEmail("teresita.garro@gmail.com");
+        emails.add(email);
+
+        email = new Email();
+        email.setName("John");
+        email.setEmail("alchichon.234@gmail.com");
+        emails.add(email);
+
+        email = new Email();
+        email.setName("TJuanere");
+        email.setEmail("tjiuanere@rakenapp.com");
+        emails.add(email);
+
+        email = new Email();
+        email.setName("Emilia");
+        email.setEmail("emilia@hotmail.com");
+        emails.add(email);
+
+        email = new Email();
+        email.setName("TePepere");
+        email.setEmail("te.pep@outlook.com");
+        emails.add(email);
+
+        email = new Email();
+        email.setName("Fulano");
+        email.setEmail("fulano@rakenapp.com");
+        emails.add(email);
+
+        email = new Email();
+        email.setName("Mengano");
+        email.setEmail("meng123@gmarakenappil.com");
+        emails.add(email);
+
         return emails;
     }
 
-
-}
+   }
