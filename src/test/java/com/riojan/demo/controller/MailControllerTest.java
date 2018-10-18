@@ -1,9 +1,7 @@
 package com.riojan.demo.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Maps;
 import com.riojan.demo.model.MailModel;
 import com.riojan.demo.restClients.QuoteConsumer;
 import com.riojan.demo.utils.FilterOutEmailsByDomains;
@@ -12,32 +10,23 @@ import com.sendgrid.Email;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -121,7 +110,7 @@ public class MailControllerTest {
         test.setTo(toList);
         test.setSubject("subject");
         test.setBody("body");
-        test.setSendQuote(false);
+        test.setEnrich(false);
 
 
         mockMvc.perform(post(URL)
@@ -146,7 +135,7 @@ public class MailControllerTest {
         test.setTo(toList);
         test.setSubject("subject");
         test.setBody("body");
-        test.setSendQuote(true);
+        test.setEnrich(true);
 
 
         mockMvc.perform(post(URL)

@@ -70,8 +70,14 @@ public class MailController {
         LOGGER.debug("from: "+ from.getName() + " (" + from.getEmail() + ")");
 
         Content content = new Content("text/html", emailJson.getBody());
-        if(emailJson.isSendQuote()) {
-            content.setValue(emailJson.getBody() + quoteConsumer.getQuote().orElse(Quote.EMPTY_QUOTE));
+        if(emailJson.isEnrich()) {
+            Quote quote = quoteConsumer.getQuote().orElse(Quote.EMPTY_QUOTE);
+            StringBuilder builder = new StringBuilder(emailJson.getBody());
+            builder.append("\n-----------Quote--------\n")
+                    .append(" Author : ").append(quote.getAuthor())
+                    .append(" Category : ").append(quote.getCat())
+                    .append("\n").append(quote.getQuote());
+            content.setValue(builder.toString());
         }
 
         String subject = emailJson.getSubject();

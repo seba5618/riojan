@@ -9,7 +9,7 @@ public class MailModel {
 
     private String body;
     private String subject;
-    private boolean sendQuote;
+    private boolean enrich;
     private List<Email> to = Collections.emptyList();
     private List<Email> cc = Collections.emptyList();
     private List<Email> bbc = Collections.emptyList();
@@ -57,23 +57,25 @@ public class MailModel {
         this.bbc = bbc;
     }
 
-    public boolean isSendQuote() {
-        return sendQuote;
+    public boolean isEnrich() {
+        return enrich;
     }
 
-    public void setSendQuote(boolean sendQuote) {
-        this.sendQuote = sendQuote;
+    public void setEnrich(boolean enrich) {
+        this.enrich = enrich;
     }
 
     public String toString(){
-        String sb = "to: " +
+        String sb = "To: " +
                 this.to +
-                "\nbody: " +
-                this.body +
-                "\nsubject: " +
+                "\nCc: " +
+                this.cc +
+                "\nBbc: " +
+                this.bbc +
+                "\nSubject: " +
                 this.subject +
-                "\ncc: " +
-                this.cc;
+                "\nBody: " +
+                this.body;
         return sb;
     }
 }
